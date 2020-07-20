@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>playBingo!!!</title>
+</head>
+<body onload="playBingo();">
+
+<table border="4">
+    <tr>
+        <td id="cell_0"></td>
+        <td id="cell_1"></td>
+        <td id="cell_2"></td>
+        <td id="cell_3"></td>
+        <td id="cell_4"></td>
+    </tr>
+    <tr>
+        <td id="cell_5"></td>
+        <td id="cell_6"></td>
+        <td id="cell_7"></td>
+        <td id="cell_8"></td>
+        <td id="cell_9"></td>
+    </tr>
+    <tr>
+        <td id="cell_10"></td>
+        <td id="cell_11"></td>
+        <td id="cell_12"></td>
+        <td id="cell_13"></td>
+        <td id="cell_14"></td>
+    </tr>
+    <tr>
+        <td id="cell_15"></td>
+        <td id="cell_16"></td>
+        <td id="cell_17"></td>
+        <td id="cell_18"></td>
+        <td id="cell_19"></td>
+    </tr>
+    <tr>
+        <td id="cell_20"></td>
+        <td id="cell_21"></td>
+        <td id="cell_22"></td>
+        <td id="cell_23"></td>
+        <td id="cell_24"></td>
+    </tr>
+</table>
+
+<script>
+    var blockMatrix = [];
+    var mainMatrixArray = new Array(25);
+    var mainMatrixArray1 = new Array(25);
+    function playBingo() {
+
+        //ASSIGN RANDOM NUMBERS TO THE MATRİX
+        for (i = 0; i < mainMatrixArray1.length; i++) {
+            var randomNumber = Math.floor(Math.random() * 75) + 1;
+
+            for (j = 0; j < mainMatrixArray.length; j++) {
+                if (mainMatrixArray[j] == randomNumber) {
+                    randomNumber = Math.floor(Math.random() * 75) + 1;
+                }
+            }
+            mainMatrixArray[i] = randomNumber;
+        }
+
+        //INDEX NUMBER FOR TESTING
+        mainMatrixArray[0] = 1;
+        mainMatrixArray[6] = 2;
+        mainMatrixArray[12] = 24;
+        mainMatrixArray[18] = 5;
+        mainMatrixArray[24] = 4;
+        //0 6 12 18 24 => cross from left to right
+        //4 8 12 16 20 => cross from right to left
+        //2 7 12 17 22 => vertical center column
+        //10 11 12 13 14 => horizontal middle row
+
+        for (i = 0; i < mainMatrixArray.length; i++) {
+            if (i == 12) {
+                //JOKER NUMBER cell_12
+                document.getElementById("cell_" + i).innerHTML = mainMatrixArray[i];
+            }
+            else {
+                document.getElementById("cell_" + i).innerHTML = mainMatrixArray[i];
+            }
+        }
+
+        for (i = 0; i < 5; i++) {//VERTICAL CAPTURE
+            //console.log(mainMatrixArray[i]);
+            var newArrayValues = 0;
+            //blockMatrix[0]=mainMatrixArray[i];
+            for (j = i; j < i + 21; j = j + 5) {
+                blockMatrix[newArrayValues] = mainMatrixArray[j];
+                newArrayValues++;
+                //console.log(blockMatrix[newArrayValues]);
+            }
+            gameResult();
+        }
+
+        for (i = 0; i < 21; i = i + 5) {//HORIZONTAL CAPTURE
+            //console.log(mainMatrixArray[i]);
+            var newArrayValues = 0;
+            //blockMatrix[0]=mainMatrixArray[i];
+            for (j = i; j < i + 5; j = j + 1) {
+                blockMatrix[newArrayValues] = mainMatrixArray[j];
+                newArrayValues++;
+                //console.log(mainMatrixArray[j]);
+            }
+            gameResult();
+        }
+
+        var blockMatrixValues = 0;
+        for (i = 0; i < 25; i = i + 6) {//CROSS FROM LEFT TO RIGHT
+            //console.log(mainMatrixArray[i]);
+            //blockMatrix[0]=mainMatrixArray[i];
+
+            blockMatrix[blockMatrixValues] = mainMatrixArray[i];
+            blockMatrixValues++;
+            //console.log(mainMatrixArray[j]);
+        }
+        gameResult();
+        var blockMatrixValues1 = 0;
+
+        for (i = 4; i < 21; i = i + 4) {//CROSS FROM RIGHT TO LEFT
+            //console.log(mainMatrixArray[i]);
+
+            //blockMatrix[0]=mainMatrixArray[i];
+
+            blockMatrix[blockMatrixValues1] = mainMatrixArray[i];
+            blockMatrixValues1++;
+            //console.log(mainMatrixArray[j]);
+        }
+        gameResult();
+    }
+
+    //BLOCK MATRİX ARRAY HAS BEEN CREATED
+    //WINNING CHECK HAS BEEN CREATED
+    function gameResult() {
+        var a = true;
+        blockMatrix.sort(function (a, b) {
+            return a - b
+        });
+        for (k = 0; k < 5; k++) {
+            if (blockMatrix[k] == mainMatrixArray[12]) {
+                blockMatrix.splice(k, 1);
+                joker();
+            }
+            if (k < 4) {
+                if (blockMatrix[k] + 1 == blockMatrix[k + 1]) {
+                    //console.log(blockMatrix[k]);
+                }
+                else
+                    a = false;
+            }
+        }
+        if (a) {
+            console.log("WIN!!");
+        }
+    }
+
+    function joker() {
+        var b = 0;
+        for (k = 0; k < 3; k++) {
+            //if(blockMatrix[k]==mainMatrixArray[12])//JOKER CHECK
+            if (blockMatrix[k] + 1 == blockMatrix[k + 1]) {
+                b = b + 1;
+            }
+
+        }
+        if (b >= 2) {
+            console.log("WIN!!");
+        }
+    }
+
+</script>
+
+</body>
+</html>
